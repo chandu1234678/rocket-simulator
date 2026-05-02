@@ -28,6 +28,7 @@ A production-grade rocket trajectory simulation and optimization system for aero
 
 ---
 
+
 ## Overview
 
 Vispootanam is a comprehensive rocket trajectory optimization system that combines advanced aerodynamic modeling, numerical integration, and multi-objective optimization to provide accurate, fast, and safe rocket design analysis.
@@ -955,4 +956,4 @@ python -m pytest tests/ -v
 
 **Built for aerospace engineering excellence.**
 
-**Star this repository**: [https://github.com/chandu1234678/rocket-simulator](https://github.com/chandu1234678/rocket-simulator)
+**Crafted with ❤️ and Built by Bharat**
