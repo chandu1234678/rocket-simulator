@@ -5,7 +5,7 @@ setup(
     version="1.0.0",
     description="ISRO-level rocket flight simulation system",
     author="GITAM University Rocketry Team",
-    author_email="your.email@gitam.edu",
+    author_email="bbodapat2@gitam.in",
     packages=find_packages(),
     install_requires=[
         "numpy>=1.24.0",

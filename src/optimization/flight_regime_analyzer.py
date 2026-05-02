@@ -346,11 +346,11 @@ class FlightRegimeAnalyzer:
         
         print(f"\nFLIGHT REGIME:")
         if analysis.is_supersonic:
-            print(f"  ⚠️  SUPERSONIC (Mach > {self.SUPERSONIC_THRESHOLD})")
+            print(f"    SUPERSONIC (Mach > {self.SUPERSONIC_THRESHOLD})")
         elif analysis.is_transonic:
-            print(f"  ⚠️  TRANSONIC ({self.TRANSONIC_LOWER} < Mach < {self.TRANSONIC_UPPER})")
+            print(f"    TRANSONIC ({self.TRANSONIC_LOWER} < Mach < {self.TRANSONIC_UPPER})")
         else:
-            print(f"  ✓  SUBSONIC (Mach < {self.TRANSONIC_LOWER})")
+            print(f"    SUBSONIC (Mach < {self.TRANSONIC_LOWER})")
         
         if analysis.recommendations:
             self._print_recommendations(analysis.recommendations)
@@ -360,7 +360,7 @@ class FlightRegimeAnalyzer:
     def _print_recommendations(self, rec: Dict[str, any]):
         """Print recommendations"""
         print(f"\n{'='*80}")
-        print("⚠️  SUPERSONIC FLIGHT DETECTED - RECOMMENDATIONS")
+        print("  SUPERSONIC FLIGHT DETECTED - RECOMMENDATIONS")
         print("="*80)
         
         print(f"\nSTATUS: {rec['status']}")
@@ -384,13 +384,13 @@ class FlightRegimeAnalyzer:
         print("WARNINGS:")
         print("="*80)
         for warning in rec['warnings']:
-            print(f"  ⚠️  {warning}")
+            print(f"    {warning}")
         
         print(f"\n{'='*80}")
         print("DESIGN SUGGESTIONS:")
         print("="*80)
         for suggestion in rec['design_suggestions']:
-            print(f"  💡 {suggestion}")
+            print(f"   {suggestion}")
         
         print(f"\n{'='*80}")
         print("RECOMMENDATION: Do not proceed with optimization.")

@@ -12,6 +12,11 @@ from src.optimization.flight_regime_analyzer import (
     FlightRegimeAnalyzer,
     FlightRegimeAnalysis
 )
+from src.optimization.vispootanam_parallel_optimizer import (
+    VispootanamParallelOptimizer,
+    VispootanamConfig,
+    VispootanamOptimizationResult
+)
 
 __all__ = [
     'ParallelRocketOptimizer',
@@ -19,5 +24,8 @@ __all__ = [
     'OptimizationResult',
     'RocketDesignOptimizer',
     'FlightRegimeAnalyzer',
-    'FlightRegimeAnalysis'
+    'FlightRegimeAnalysis',
+    'VispootanamParallelOptimizer',
+    'VispootanamConfig',
+    'VispootanamOptimizationResult'
 ]

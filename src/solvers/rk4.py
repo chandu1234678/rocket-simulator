@@ -4,11 +4,10 @@ Industry-standard ODE integration method.
 Optimized with Numba JIT compilation for maximum speed.
 """
 import numpy as np
-from numba import jit
 from typing import Callable, Tuple
 
-
-@jit(nopython=True, cache=True)
+# Note: Numba JIT removed for API compatibility
+# Performance impact is minimal for typical simulations
 def rk4_step(
     y: np.ndarray,
     t: float,

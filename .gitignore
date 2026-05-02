@@ -1,4 +1,6 @@
+# ============================================================================
 # Python
+# ============================================================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -16,76 +18,219 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
+*.pyc
 
-# Virtual Environment
+# ============================================================================
+# Virtual Environments
+# ============================================================================
 venv/
 env/
 ENV/
+env.bak/
+venv.bak/
+.venv/
+virtualenv/
 
-# IDE
+# ============================================================================
+# IDEs and Editors
+# ============================================================================
+# VSCode
 .vscode/
+*.code-workspace
+
+# PyCharm
 .idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
 *.swp
 *.swo
 *~
+.vim/
 
-# Testing
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============================================================================
+# Testing and Coverage
+# ============================================================================
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
+.tox/
+.nox/
+coverage.xml
 *.cover
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+test-results/
+junit/
 
+# ============================================================================
+# Jupyter Notebook
+# ============================================================================
+.ipynb_checkpoints
+*.ipynb
+!examples/*.ipynb
+
+# ============================================================================
 # Documentation
+# ============================================================================
 docs/_build/
 docs/_static/
 docs/_templates/
+site/
+.doctrees/
+*.rst~
 
-# Data
-*.csv
-*.dat
-!data/rckt_kushinagar.csv
-!data/config.json
-
-# Logs
+# ============================================================================
+# Logs and Databases
+# ============================================================================
 *.log
+*.sql
+*.sqlite
+*.db
+logs/
+*.log.*
 
-# OS
-.DS_Store
+# ============================================================================
+# Results and Output
+# ============================================================================
+results/
+output/
+data/output/
+*.json
+!data/config.json
+!package.json
+*.csv
+!rocket/*.csv
+*.txt
+!requirements.txt
+!LICENSE
+*.dat
+*.out
+
+# ============================================================================
+# OS Specific
+# ============================================================================
+# Windows
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
 
-# C++
-*.o
-*.a
-*.so
-*.dylib
-*.dll
-*.exe
-cmake-build-*/
-CMakeFiles/
-CMakeCache.txt
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb
+# Linux
+*~
+.directory
+.Trash-*
 
-# Profiling
-*.prof
-*.stats
-
-# PDFs and Documents
-*.pdf
-
-# Rocket folder (contains PDFs and images)
-rocket/
-
+# ============================================================================
+# Project Specific
+# ============================================================================
 # Optimization results
 optimization_results.json
+trajectory_data.json
+simulation_cache.pkl
 
-# Unnecessary documentation files
-OPTIMIZATION_IMPLEMENTATION_SUMMARY.md
-IMPLEMENTATION_COMPLETE.md
-SUPERSONIC_CHECKING_SUMMARY.md
-FINAL_IMPLEMENTATION_SUMMARY.md
+# OpenRocket files (keep examples)
+*.ork
+!rocket/*.ork
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+*.bak
+*.backup
+
+# User configuration
+.env
+.env.local
+config.local.json
+user_config.json
+
+# Large data files
+*.hdf5
+*.h5
+*.pkl
+*.pickle
+
+# Compiled extensions
+*.pyd
+*.dll
+*.dylib
+
+# ============================================================================
+# CI/CD
+# ============================================================================
+.github/workflows/*.log
+.gitlab-ci.yml.local
+
+# ============================================================================
+# Security
+# ============================================================================
+# Never commit secrets
+*.pem
+*.key
+*.cert
+secrets.json
+credentials.json
+.secrets/
+
+# ============================================================================
+# Performance Profiling
+# ============================================================================
+*.prof
+*.lprof
+profile_results/
+.profiling/
+
+# ============================================================================
+# Documentation Builds
+# ============================================================================
+docs/build/
+docs/dist/
+mkdocs/site/
+
+# ============================================================================
+# Package Management
+# ============================================================================
+Pipfile.lock
+poetry.lock
+pdm.lock
+
+# ============================================================================
+# Misc
+# ============================================================================
+.cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/

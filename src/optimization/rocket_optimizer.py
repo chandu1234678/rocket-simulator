@@ -160,7 +160,7 @@ class RocketDesignOptimizer:
             self.last_analysis = initial_analysis
             
             if initial_analysis.is_supersonic:
-                print(f"\n⚠️  WARNING: Base configuration is SUPERSONIC (Mach {initial_analysis.max_mach:.2f})")
+                print(f"\n  WARNING: Base configuration is SUPERSONIC (Mach {initial_analysis.max_mach:.2f})")
                 self.flight_analyzer.print_analysis(initial_analysis)
                 
                 return {
@@ -171,7 +171,7 @@ class RocketDesignOptimizer:
                     'message': 'Optimization stopped: Rocket goes supersonic. See recommendations.'
                 }
             else:
-                print(f"✓ Base configuration is {initial_analysis}")
+                print(f" Base configuration is {initial_analysis}")
                 print("Proceeding with optimization...\n")
         
         # Create optimization config
@@ -202,7 +202,7 @@ class RocketDesignOptimizer:
             self.last_analysis = best_analysis
             
             if best_analysis.is_supersonic:
-                print(f"\n⚠️  WARNING: Optimized design is SUPERSONIC (Mach {best_analysis.max_mach:.2f})")
+                print(f"\n  WARNING: Optimized design is SUPERSONIC (Mach {best_analysis.max_mach:.2f})")
                 self.flight_analyzer.print_analysis(best_analysis)
                 
                 return {
@@ -222,8 +222,8 @@ class RocketDesignOptimizer:
         # Print summary
         optimizer.print_summary(results)
         
-        # Export results
-        optimizer.export_results("optimization_results.json")
+        # Export results (disabled for API - causes JSON serialization issues)
+        # optimizer.export_results("optimization_results.json")
         
         # Return best result as dictionary
         best = results[0]
@@ -290,7 +290,7 @@ def run_optimization_example():
     
     # Check result status
     if result['status'] == 'SUPERSONIC_DETECTED':
-        print("\n⚠️  OPTIMIZATION STOPPED: Supersonic flight detected!")
+        print("\n  OPTIMIZATION STOPPED: Supersonic flight detected!")
         print("See recommendations above for propulsion modifications.")
     else:
         print("\nOptimization Complete!")

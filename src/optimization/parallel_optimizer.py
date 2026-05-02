@@ -1,6 +1,7 @@
 """
 Parallel Optimization Module for Rocket Design
 Optimizes diameter, nose cone length, and body length to achieve target apogee
+Includes pre-flight feasibility checking
 """
 
 import numpy as np
@@ -10,6 +11,12 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import multiprocessing as mp
 from scipy.optimize import minimize, differential_evolution, Bounds
 import time
+
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from src.optimization.feasibility_checker import FeasibilityChecker, FeasibilityResult
 
 
 @dataclass
@@ -66,9 +73,11 @@ class ParallelRocketOptimizer:
     """
     Parallel optimizer for rocket design parameters
     Optimizes diameter, nose cone length, and body length to achieve target apogee
+    Includes pre-flight feasibility checking
     """
     
-    def __init__(self, simulation_function: Callable, config: OptimizationConfig):
+    def __init__(self, simulation_function: Callable, config: OptimizationConfig, 
+                 base_rocket_config: Optional[Dict] = None):
         """
         Initialize optimizer
         
@@ -76,12 +85,16 @@ class ParallelRocketOptimizer:
             simulation_function: Function that takes (diameter, nose_length, body_length, base_config)
                                 and returns apogee altitude
             config: Optimization configuration
+            base_rocket_config: Base rocket configuration for feasibility check
         """
         self.simulate = simulation_function
         self.config = config
         self.evaluation_count = 0
         self.best_result = None
         self.all_results = []
+        self.base_rocket_config = base_rocket_config
+        self.feasibility_checker = FeasibilityChecker()
+        self.feasibility_result = None
         
     def _objective_function(self, x: np.ndarray) -> float:
         """
@@ -215,13 +228,15 @@ class ParallelRocketOptimizer:
                 computation_time=computation_time
             )
     
-    def optimize_parallel(self, initial_guess: Optional[np.ndarray] = None) -> List[OptimizationResult]:
+    def optimize_parallel(self, initial_guess: Optional[np.ndarray] = None, 
+                         skip_feasibility_check: bool = False) -> List[OptimizationResult]:
         """
         Run multiple optimization methods in parallel
         
         Args:
             initial_guess: Initial guess [diameter, nose_length, body_length]
                           If None, uses midpoint of bounds
+            skip_feasibility_check: Skip pre-flight feasibility check (default: False)
         
         Returns:
             List of OptimizationResult objects, sorted by error
@@ -233,8 +248,47 @@ class ParallelRocketOptimizer:
                 (self.config.body_length_min + self.config.body_length_max) / 2
             ])
         
+        # PRE-FLIGHT FEASIBILITY CHECK
+        if not skip_feasibility_check and self.base_rocket_config is not None:
+            print(f"\n{'='*80}")
+            print(f"PHASE 1: PRE-FLIGHT FEASIBILITY CHECK")
+            print(f"{'='*80}")
+            print(f"Checking if target is reachable without going supersonic...")
+            print(f"(This takes 2 seconds vs 20 minutes for full optimization)")
+            
+            feasibility_start = time.time()
+            
+            # Extract rocket parameters from base config
+            self.feasibility_result = self.feasibility_checker.check_feasibility(
+                thrust=self.base_rocket_config.get('thrust', 747.1),
+                burn_time=self.base_rocket_config.get('burn_time', 1.8),
+                specific_impulse=self.base_rocket_config.get('specific_impulse', 180),
+                mass_initial=self.base_rocket_config.get('mass_initial', 2.76),
+                mass_dry=self.base_rocket_config.get('mass_dry', 2.0),
+                target_apogee=self.config.target_apogee,
+                temperature=self.base_rocket_config.get('temperature', 287.0)
+            )
+            
+            feasibility_time = time.time() - feasibility_start
+            
+            # Print results
+            self.feasibility_checker.print_feasibility(self.feasibility_result)
+            print(f"\nFeasibility check completed in {feasibility_time:.2f}s")
+            
+            # Stop if not feasible
+            if not self.feasibility_result.can_proceed:
+                print(f"\n{'='*80}")
+                print(f" OPTIMIZATION ABORTED")
+                print(f"{'='*80}")
+                print(f"Design is not feasible. Please modify rocket parameters as suggested above.")
+                print(f"Time saved: ~20 minutes")
+                print(f"{'='*80}\n")
+                return []
+            
+            print(f"\n Feasibility check PASSED - proceeding with optimization...")
+        
         print(f"\n{'='*80}")
-        print(f"PARALLEL ROCKET OPTIMIZATION")
+        print(f"PHASE 2: PARALLEL ROCKET OPTIMIZATION")
         print(f"{'='*80}")
         print(f"Target Apogee: {self.config.target_apogee:.2f} m")
         print(f"Tolerance: {self.config.tolerance:.2f} m")
@@ -261,7 +315,7 @@ class ParallelRocketOptimizer:
                     results.append(result)
                     
                     # Print progress
-                    status = "✓ CONVERGED" if result.success else "✗ NOT CONVERGED"
+                    status = " CONVERGED" if result.success else " NOT CONVERGED"
                     print(f"{status} | {result.method:20s} | "
                           f"Apogee: {result.apogee:7.2f}m | "
                           f"Error: {result.error:6.2f}m | "
@@ -269,7 +323,7 @@ class ParallelRocketOptimizer:
                           f"Iters: {result.iterations:4d}")
                     
                 except Exception as e:
-                    print(f"✗ FAILED | {method:20s} | Error: {str(e)}")
+                    print(f" FAILED | {method:20s} | Error: {str(e)}")
         
         # Sort results by error
         results.sort(key=lambda r: r.error)
