@@ -1,0 +1,74 @@
+{
+  "rocket": {
+    "name": "Kushinagar-001",
+    "diameter": 0.216,
+    "length": 1.5,
+    "mass_initial": 11.01,
+    "mass_dry": 8.0747,
+    "propellant_mass": 2.9353,
+    "reference_area": 0.0366435,
+    "nose_cone_length": 0.3,
+    "body_length": 1.2
+  },
+  "propulsion": {
+    "thrust_max": 747.1,
+    "burn_time": 1.8,
+    "specific_impulse": 180,
+    "thrust_curve_type": "constant",
+    "thrust_curve_data": null
+  },
+  "aerodynamics": {
+    "cd_base": 0.366,
+    "cd_friction": 0.219,
+    "cd_pressure": 0.026,
+    "cd_base_drag": 0.121,
+    "mach_model": "simple",
+    "transonic_spike_magnitude": 0.5,
+    "transonic_spike_center": 1.0,
+    "transonic_spike_width": 0.15
+  },
+  "launch": {
+    "altitude": 83.5,
+    "latitude": 26.74,
+    "longitude": 83.887,
+    "temperature": 287.607,
+    "pressure": 100345.7,
+    "wind_speed": 1.807,
+    "wind_direction": 90,
+    "launch_angle": 90.0,
+    "launch_rod_length": 3.0
+  },
+  "simulation": {
+    "timestep": 0.01,
+    "max_time": 100.0,
+    "solver": "RK4",
+    "adaptive_timestep": false,
+    "min_timestep": 0.001,
+    "max_timestep": 0.1,
+    "tolerance": 1e-6
+  },
+  "optimization": {
+    "enabled": true,
+    "target_apogee": 300.0,
+    "tolerance": 5.0,
+    "max_iterations": 100,
+    "diameter_range": [0.10, 0.30],
+    "nose_length_range": [0.20, 0.80],
+    "body_length_range": [0.80, 2.50],
+    "methods": ["differential_evolution", "nelder-mead", "powell", "slsqp"],
+    "constraints": {
+      "length_to_diameter_ratio_min": 5.0,
+      "length_to_diameter_ratio_max": 20.0,
+      "nose_to_body_ratio_min": 0.1,
+      "nose_to_body_ratio_max": 0.5
+    }
+  },
+  "output": {
+    "log_trajectory": true,
+    "log_interval": 0.01,
+    "export_csv": true,
+    "export_json": true,
+    "generate_plots": true,
+    "plot_types": ["altitude", "velocity", "acceleration", "mach", "forces"]
+  }
+}

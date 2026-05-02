@@ -1,0 +1,91 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Documentation
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Data
+*.csv
+*.dat
+!data/rckt_kushinagar.csv
+!data/config.json
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# C++
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Profiling
+*.prof
+*.stats
+
+# PDFs and Documents
+*.pdf
+
+# Rocket folder (contains PDFs and images)
+rocket/
+
+# Optimization results
+optimization_results.json
+
+# Unnecessary documentation files
+OPTIMIZATION_IMPLEMENTATION_SUMMARY.md
+IMPLEMENTATION_COMPLETE.md
+SUPERSONIC_CHECKING_SUMMARY.md
+FINAL_IMPLEMENTATION_SUMMARY.md
