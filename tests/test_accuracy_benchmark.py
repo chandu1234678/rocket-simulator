@@ -3,10 +3,6 @@ Accuracy Benchmark Tests
 Verifies the claimed accuracy levels (80%/90%/95%) are reproducible
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 import pytest
 from src.optimization.hybrid_optimizer import HybridOptimizer
 

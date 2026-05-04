@@ -3,10 +3,6 @@ Complete VISPOOTANAM-Level System Test
 Tests all implemented features
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 print("="*80)
 print(" VISPOOTANAM-LEVEL ROCKET OPTIMIZATION SYSTEM - COMPLETE TEST")
 print("="*80)

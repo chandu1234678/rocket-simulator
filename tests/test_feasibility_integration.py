@@ -2,10 +2,6 @@
 Test Pre-Flight Feasibility Check Integration
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from src.optimization.feasibility_checker import FeasibilityChecker
 
 def test_feasibility_integration():

@@ -3,10 +3,6 @@ Test Fast vs Accurate Optimization
 Compares FastOptimizer with HybridOptimizer
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from src.optimization.fast_optimizer import FastOptimizer
 from src.optimization.hybrid_optimizer import HybridOptimizer
 
