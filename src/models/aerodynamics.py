@@ -1,10 +1,10 @@
 """
 Aerodynamics model with Mach-dependent drag coefficient.
 CRITICAL: Implements transonic drag spike for accuracy.
-Optimized with Numba JIT compilation.
+Optimized with Numba JIT compilation (optional).
 """
 import numpy as np
-from numba import jit
+from src.utils.numba_utils import jit
 from typing import Tuple
 
 

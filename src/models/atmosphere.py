@@ -1,10 +1,10 @@
 """
 Atmospheric model for rocket simulation.
 Implements exponential density model and ISA standard atmosphere.
-Optimized with Numba JIT compilation.
+Optimized with Numba JIT compilation (optional).
 """
 import numpy as np
-from numba import jit
+from src.utils.numba_utils import jit
 from typing import Tuple
 
 
