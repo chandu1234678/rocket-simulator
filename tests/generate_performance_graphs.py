@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from datetime import datetime
+from pathlib import Path
 
 from src.optimization.fast_optimizer import FastOptimizer
 from src.optimization.hybrid_optimizer import HybridOptimizer
