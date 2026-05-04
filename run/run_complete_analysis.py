@@ -3,6 +3,13 @@ Complete Rocket Analysis - Full Workflow
 For aerospace students - just modify the values below and run!
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+
+from data.default_rocket_config import get_config, DEFAULT_TARGET_APOGEE, DEFAULT_TOLERANCE
+
 print("="*80)
 print("ROCKET TRAJECTORY ANALYSIS - COMPLETE WORKFLOW")
 print("="*80)
@@ -14,21 +21,19 @@ print()
 
 print("Step 1: Loading rocket configuration...")
 
-ROCKET_CONFIG = {
-    'thrust': 80.0,              # Thrust force in Newtons (N)
-    'burn_time': 1.8,            # Engine burn duration in seconds (s) - NOTE: Actual burn time calculated from propellant
-    'specific_impulse': 180,     # Specific impulse in seconds (s)
-    'mass_initial': 2.20,        # Initial total mass in kilograms (kg) - 0.20kg propellant for ~4.4s burn
-    'mass_dry': 2.0,             # Dry mass (without propellant) in kg
-}
+# Load default configuration (or use 'high_altitude', 'low_altitude', 'competition')
+ROCKET_CONFIG = get_config('default')
+
+# Override specific parameters if needed
+# ROCKET_CONFIG['thrust'] = 100.0  # Uncomment to customize
 
 # Rocket Geometry Ratios (used to estimate dimensions from optimized diameter)
 NOSE_TO_DIAMETER_RATIO = 3.0     # Nose cone length = 3 × Diameter (typical for model rockets)
 BODY_TO_DIAMETER_RATIO = 10.0    # Body tube length = 10 × Diameter (typical for model rockets)
 
-TARGET_APOGEE = 500.0            # Target altitude in meters (m) - REDUCED for testing
-TOLERANCE = 50.0                 # Acceptable error in meters (m)
-MAX_ITERATIONS = 100             # Maximum optimization iterations (higher = more accurate but slower)
+TARGET_APOGEE = DEFAULT_TARGET_APOGEE  # Target altitude in meters (m)
+TOLERANCE = DEFAULT_TOLERANCE          # Acceptable error in meters (m)
+MAX_ITERATIONS = 100                   # Maximum optimization iterations
 
 print(f"  Thrust: {ROCKET_CONFIG['thrust']} N")
 print(f"  Burn Time: {ROCKET_CONFIG['burn_time']} s")

@@ -3,6 +3,14 @@ Trajectory Simulation
 Simulate your rocket's flight path with given parameters
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+
+from data.default_rocket_config import get_config
+
+
 print("="*80)
 print("ROCKET TRAJECTORY SIMULATION")
 print("="*80)
@@ -12,17 +20,11 @@ print()
 # ENTER YOUR ROCKET PARAMETERS HERE
 # ============================================================================
 
-ROCKET_CONFIG = {
-    'thrust': 80.0,              # Thrust force in Newtons (N)
-    'burn_time': 1.8,            # Engine burn duration in seconds (s)
-    'specific_impulse': 180,     # Specific impulse in seconds (s)
-    'mass_initial': 2.76,        # Initial total mass in kilograms (kg)
-    'mass_dry': 2.0,             # Dry mass (without propellant) in kg
-    'diameter': 0.1,             # Body diameter in meters (m)
-    'nose_cone_length': 0.3,     # Nose cone length in meters (m)
-    'body_length': 1.0,          # Body tube length in meters (m)
-    'drag_coefficient': 0.35,    # Drag coefficient (Cd)
-}
+# Load default configuration
+ROCKET_CONFIG = get_config('default')
+
+# Override if needed
+# ROCKET_CONFIG['thrust'] = 100.0
 
 # ============================================================================
 # RUNNING SIMULATION
