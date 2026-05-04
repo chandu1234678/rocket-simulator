@@ -1,8 +1,20 @@
 from setuptools import setup, find_packages
+import os
+import re
+
+# Read version from src/__init__.py (single source of truth)
+def get_version():
+    init_file = os.path.join(os.path.dirname(__file__), 'src', '__init__.py')
+    with open(init_file, 'r') as f:
+        content = f.read()
+        match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
+        if match:
+            return match.group(1)
+    raise RuntimeError("Unable to find version string in src/__init__.py")
 
 setup(
     name="rocket-simulator",
-    version="1.0.0",
+    version=get_version(),
     description="ISRO-level rocket flight simulation system",
     author="GITAM University Rocketry Team",
     author_email="bbodapat2@gitam.in",
@@ -11,10 +23,11 @@ setup(
         "numpy>=1.24.0",
         "scipy>=1.10.0",
         "matplotlib>=3.7.0",
-        "pandas>=2.0.0",
-        "numba>=0.57.0",
     ],
     extras_require={
+        "performance": [
+            "numba>=0.57.0",  # Optional JIT compilation for speed
+        ],
         "dev": [
             "pytest>=7.3.0",
             "pytest-cov>=4.1.0",

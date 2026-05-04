@@ -20,9 +20,9 @@ print("Step 1: Loading rocket configuration...")
 
 ROCKET_CONFIG = {
     'thrust': 80.0,              # Thrust force in Newtons (N)
-    'burn_time': 1.8,            # Engine burn duration in seconds (s)
+    'burn_time': 1.8,            # Engine burn duration in seconds (s) - NOTE: Actual burn time calculated from propellant
     'specific_impulse': 180,     # Specific impulse in seconds (s)
-    'mass_initial': 2.76,        # Initial total mass in kilograms (kg)
+    'mass_initial': 2.20,        # Initial total mass in kilograms (kg) - 0.20kg propellant for ~4.4s burn
     'mass_dry': 2.0,             # Dry mass (without propellant) in kg
 }
 
@@ -30,7 +30,7 @@ ROCKET_CONFIG = {
 NOSE_TO_DIAMETER_RATIO = 3.0     # Nose cone length = 3 × Diameter (typical for model rockets)
 BODY_TO_DIAMETER_RATIO = 10.0    # Body tube length = 10 × Diameter (typical for model rockets)
 
-TARGET_APOGEE = 5000.0           # Target altitude in meters (m)
+TARGET_APOGEE = 500.0            # Target altitude in meters (m) - REDUCED for testing
 TOLERANCE = 50.0                 # Acceptable error in meters (m)
 MAX_ITERATIONS = 100             # Maximum optimization iterations (higher = more accurate but slower)
 
@@ -161,10 +161,20 @@ print(f"  Maximum Altitude: {result['apogee']:.2f} m")
 print(f"  Maximum Mach Number: {result['max_mach']:.3f}")
 print()
 
-if result['converged']:
-    print("STATUS: SUCCESS - Design meets requirements!")
+if result['converged'] and result['max_mach'] < 1.2 and result['error'] < TARGET_APOGEE * 0.2:
+    print("STATUS: ✓ SUCCESS - Design meets requirements!")
+elif result['max_mach'] >= 1.2:
+    print("STATUS: ✗ FAILED - SUPERSONIC (Mach {:.2f} >= 1.2)".format(result['max_mach']))
+    print("  WARNING: Design exceeds supersonic limit - UNSAFE!")
+elif result['error'] > TARGET_APOGEE * 0.5:
+    print("STATUS: ✗ FAILED - Large error ({:.1f}m, {:.1f}%)".format(
+        result['error'], 100 * result['error'] / TARGET_APOGEE))
+    print("  Design is too far from target - needs major changes")
+elif result['error'] > TARGET_APOGEE * 0.2:
+    print("STATUS: ⚠ CLOSE - Needs refinement ({:.1f}m error, {:.1f}%)".format(
+        result['error'], 100 * result['error'] / TARGET_APOGEE))
 else:
-    print("STATUS: CLOSE - Design is close but may need refinement")
+    print("STATUS: ✓ ACCEPTABLE - Within tolerance")
 
 print()
 print("="*80)

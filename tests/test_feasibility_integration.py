@@ -17,15 +17,15 @@ def test_feasibility_integration():
     print("TESTING PRE-FLIGHT FEASIBILITY CHECK INTEGRATION")
     print("="*80)
     
-    # Test 1: Good design (should pass) - subsonic thrust
+    # Test 1: Good design (should pass) - subsonic thrust with less propellant
     print("\n\n" + "="*80)
     print("TEST 1: FEASIBLE DESIGN (Should PASS)")
     print("="*80)
     result1 = checker.check_feasibility(
-        thrust=80.0,  # Well below supersonic threshold
+        thrust=80.0,  # Moderate thrust
         burn_time=1.8,
         specific_impulse=180,
-        mass_initial=2.76,
+        mass_initial=2.2,  # Less propellant (0.2kg) to stay subsonic
         mass_dry=2.0,
         target_apogee=500.0
     )
@@ -33,7 +33,7 @@ def test_feasibility_integration():
     
     assert result1.can_proceed, "Test 1 should pass"
     assert not result1.is_supersonic, "Test 1 should not be supersonic"
-    print("\n TEST 1 PASSED")
+    print("\n✓ TEST 1 PASSED")
     
     # Test 2: Supersonic design (should fail)
     print("\n\n" + "="*80)

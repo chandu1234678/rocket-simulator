@@ -59,12 +59,16 @@ class HybridOptimizer:
         
         g0 = 9.81
         
-        # Estimate burnout velocity (no drag)
-        m_avg = (m0 + m_dry) / 2
-        v_burnout_ideal = (thrust / m_avg - g0) * burn_time
+        # Estimate burnout velocity using Tsiolkovsky equation (correct physics)
+        v_e = isp * g0  # Exhaust velocity
+        mass_ratio = m0 / m_dry
+        v_burnout_ideal = v_e * np.log(mass_ratio) - g0 * burn_time
         
-        # Estimate ideal apogee (no drag)
-        h_ideal = v_burnout_ideal**2 / (2 * g0)
+        # Estimate burnout altitude (rough approximation)
+        h_burnout = 0.5 * v_burnout_ideal * burn_time  # Average velocity * time
+        
+        # Estimate ideal apogee (no drag) - includes burnout altitude
+        h_ideal = h_burnout + v_burnout_ideal**2 / (2 * g0)
         
         # Ratio of target to ideal
         ratio = self.target_apogee / h_ideal if h_ideal > 0 else 0.5
@@ -239,6 +243,19 @@ class HybridOptimizer:
         
         phase2_time = time.time() - phase2_start
         total_time = time.time() - start_time
+        
+        # CRITICAL: Supersonic prevention check
+        if result['max_mach'] >= 1.2:
+            print(f"\n{'='*80}")
+            print(f"⚠️  SUPERSONIC VIOLATION DETECTED")
+            print(f"{'='*80}")
+            print(f"  Max Mach: {result['max_mach']:.3f} (limit: 1.2)")
+            print(f"  This design is UNSAFE and must be rejected!")
+            print(f"{'='*80}\n")
+            result['converged'] = False
+            result['supersonic_violation'] = True
+        else:
+            result['supersonic_violation'] = False
         
         # Print results
         print(f"\n{'='*80}")

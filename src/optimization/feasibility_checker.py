@@ -13,6 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from src.models.ideal_trajectory import IdealTrajectoryAnalyzer, IdealTrajectoryResult
+from src.models.constants import SUPERSONIC_MACH_LIMIT
 
 
 @dataclass
@@ -43,12 +44,12 @@ class FeasibilityChecker:
     - Guide user to feasible designs
     """
     
-    def __init__(self, supersonic_limit: float = 1.2):
+    def __init__(self, supersonic_limit: float = SUPERSONIC_MACH_LIMIT):
         """
         Initialize checker
         
         Args:
-            supersonic_limit: Mach number limit (default: 1.2)
+            supersonic_limit: Mach number limit (default: from constants.SUPERSONIC_MACH_LIMIT)
         """
         self.supersonic_limit = supersonic_limit
         self.ideal_analyzer = IdealTrajectoryAnalyzer()

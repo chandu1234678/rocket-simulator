@@ -118,7 +118,10 @@ def quick_functionality_test():
             return False
             
     except Exception as e:
+        import traceback
         print(f"  Functionality test failed: {e}")
+        print("\nFull traceback:")
+        print(traceback.format_exc())
         return False
 
 def main():
@@ -141,7 +144,9 @@ def main():
     
     for check, passed in results.items():
         status = "PASS" if passed else "FAIL"
-        print(f"  {check.capitalize()}: {status}")
+        # Format check name properly: "run_files" -> "Run Files"
+        formatted_check = check.replace('_', ' ').title()
+        print(f"  {formatted_check}: {status}")
     
     all_passed = all(results.values())
     

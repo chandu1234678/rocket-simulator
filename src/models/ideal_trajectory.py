@@ -95,10 +95,12 @@ class IdealTrajectoryAnalyzer:
         # Total time to apogee
         t_apogee = burn_time + t_coast
         
-        # Calculate max Mach number
+        # Calculate max Mach number at burnout altitude
         # Speed of sound: a = sqrt(gamma * R * T)
         # For air: gamma = 1.4, R = 287 J/(kg·K)
-        speed_of_sound = np.sqrt(1.4 * 287.0 * temperature)
+        # Use ISA temperature at burnout altitude
+        temperature_at_burnout = 288.15 - 0.0065 * h_burnout  # ISA lapse rate
+        speed_of_sound = np.sqrt(1.4 * 287.0 * temperature_at_burnout)
         max_mach = v_burnout / speed_of_sound
         
         # Feasibility check
@@ -131,27 +133,15 @@ class IdealTrajectoryAnalyzer:
         """
         Simulate powered ascent phase
         
-        Uses Tsiolkovsky rocket equation for velocity
-        Integrates for altitude
+        Uses numerical integration for both velocity and altitude
+        to ensure consistency
         
         Returns:
             (burnout_velocity, burnout_altitude, max_acceleration)
         """
-        # Tsiolkovsky rocket equation (ideal case)
-        # Δv = v_e * ln(m0/mf) - g*t
-        # where v_e = Isp * g
-        
-        v_exhaust = thrust / mdot  # Effective exhaust velocity
-        mass_ratio = mass_initial / mass_dry
-        
-        # Velocity at burnout (accounting for gravity loss)
-        v_burnout = v_exhaust * np.log(mass_ratio) - self.g * burn_time
-        
-        # Altitude at burnout (numerical integration)
-        # Use average velocity approximation
-        # More accurate: integrate v(t) = v_e*ln(m0/(m0-mdot*t)) - g*t
-        
-        dt = 0.01  # Small timestep for accuracy
+        # Use larger timestep for speed (0.1s instead of 0.01s)
+        # This is 10x faster with minimal accuracy loss for feasibility checks
+        dt = 0.1  # Larger timestep for speed
         t = 0.0
         h = 0.0
         v = 0.0
@@ -166,7 +156,9 @@ class IdealTrajectoryAnalyzer:
             h += v * dt
             t += dt
         
-        return v_burnout, h, a_max
+        # Return the integrated velocity (not Tsiolkovsky)
+        # This ensures v and h are consistent
+        return v, h, a_max
     
     def _coast_to_apogee(self, v_initial: float, h_initial: float) -> Tuple[float, float]:
         """

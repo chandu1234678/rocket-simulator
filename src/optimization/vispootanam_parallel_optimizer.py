@@ -150,7 +150,7 @@ class VispootanamParallelOptimizer:
         
         # Extract rocket parameters
         thrust = self.base_config['thrust']
-        burn_time = self.base_config['burn_time']
+        burn_time_config = self.base_config['burn_time']
         specific_impulse = self.base_config['specific_impulse']
         mass_initial = self.base_config['mass_initial']
         mass_dry = self.base_config['mass_dry']
@@ -159,15 +159,20 @@ class VispootanamParallelOptimizer:
         g0 = 9.81
         mass_flow_rate = thrust / (specific_impulse * g0)
         
+        # CRITICAL FIX: Calculate actual burn time from propellant mass
+        # The config burn_time might not match the available propellant
+        propellant_mass = mass_initial - mass_dry
+        burn_time = propellant_mass / mass_flow_rate
+        
         # Reference area
         reference_area = np.pi * (diameter / 2) ** 2
         
         # Acceleration function
-        def acceleration_func(altitude, velocity, mass):
-            # Atmospheric density
+        def acceleration_func(altitude, velocity, mass, time_elapsed=0.0):
+            # Atmospheric density (ISA standard atmosphere)
             rho = 1.225 * np.exp(-altitude / 8500)
             
-            # Speed of sound
+            # Speed of sound (temperature-corrected)
             temperature = 288.15 - 0.0065 * altitude
             speed_of_sound = np.sqrt(1.4 * 287 * temperature)
             
@@ -189,8 +194,8 @@ class VispootanamParallelOptimizer:
             if velocity < 0:
                 drag = -drag
             
-            # Thrust (only during burn)
-            current_thrust = thrust if altitude >= 0 else 0
+            # Thrust (only during burn AND above ground) - CRITICAL FIX
+            current_thrust = thrust if (altitude >= 0 and time_elapsed < burn_time) else 0.0
             
             # Net acceleration
             accel = (current_thrust - drag) / mass - g0
@@ -304,18 +309,35 @@ class VispootanamParallelOptimizer:
         ]
         
         try:
-            # Progress callback
-            iteration_count = [0]
+            # Progress tracking
+            generation_count = [0]
             best_error = [float('inf')]
+            best_params = [None]
             
-            def callback(xk, convergence):
-                iteration_count[0] += 1
+            # Wrapper to show progress per generation
+            def objective_with_display(x):
+                error = self._objective_function_regime(x, regime)
+                return error
+            
+            # Callback to show generation progress
+            def generation_callback(xk, convergence=None):
+                generation_count[0] += 1
+                
+                # Evaluate best solution in current generation
                 error = self._objective_function_regime(xk, regime)
+                
                 if error < best_error[0]:
+                    improvement = best_error[0] - error
                     best_error[0] = error
+                    best_params[0] = xk.copy()
                     diameter, nose_length, body_length, cd = xk
-                    print(f"    Iter {iteration_count[0]:3d}: "
-                          f"D={diameter:.4f}m, Cd={cd:.4f}, Error={error:.1f}m")
+                    
+                    print(f"    ✓ Gen {generation_count[0]:2d}: "
+                          f"D={diameter:.4f}m, Cd={cd:.4f}, "
+                          f"Error={error:6.1f}m (↓{improvement:5.1f}m)")
+                else:
+                    print(f"      Gen {generation_count[0]:2d}: No improvement (best: {best_error[0]:.1f}m)")
+                
                 return False
             
             print(f"\n  Optimizing {regime.value}...")
@@ -323,22 +345,24 @@ class VispootanamParallelOptimizer:
             
             # Optimize (with early termination for speed)
             result = differential_evolution(
-                lambda x: self._objective_function_regime(x, regime),
+                objective_with_display,
                 bounds=bounds,
                 maxiter=self.config.max_iterations,
                 popsize=self.config.population_size,
-                tol=self.config.tolerance * 10,  # Relaxed tolerance for speed
+                tol=self.config.tolerance,  # Tighter tolerance for more iterations
                 seed=int(time.time() * 1000) % 2**32,
                 workers=1,
-                updating='immediate',  # Faster than 'deferred'
+                updating='deferred',  # Use deferred for better callback behavior
                 polish=False,  # Skip final polish for speed
-                atol=self.config.tolerance * 2,  # Relaxed for early termination
+                atol=self.config.tolerance,
                 strategy='best1bin',  # Faster strategy
-                callback=callback
+                callback=generation_callback,
+                disp=False
             )
             
             print("  " + "-" * 70)
-            print(f"  Completed in {iteration_count[0]} iterations\n")
+            print(f"  Completed: {generation_count[0]} generations, "
+                  f"Best error: {best_error[0]:.1f}m\n")
             
             # Extract results
             diameter, nose_length, body_length, cd_optimized = result.x

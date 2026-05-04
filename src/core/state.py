@@ -29,8 +29,7 @@ class State:
         """Validate state after initialization."""
         if self.m <= 0:
             raise ValueError(f"Mass must be positive, got {self.m}")
-        if self.h < 0:
-            raise ValueError(f"Altitude cannot be negative, got {self.h}")
+        # Note: Altitude can be negative during landing - validation moved to simulation loop
         if not np.isfinite([self.t, self.h, self.v, self.m, self.a]).all():
             raise ValueError("State contains non-finite values (NaN or Inf)")
     

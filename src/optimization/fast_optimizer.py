@@ -64,7 +64,7 @@ class FastOptimizer:
         """
         # Extract parameters
         thrust = self.base_config['thrust']
-        burn_time = self.base_config['burn_time']
+        burn_time_config = self.base_config['burn_time']
         isp = self.base_config['specific_impulse']
         m0 = self.base_config['mass_initial']
         m_dry = self.base_config['mass_dry']
@@ -78,6 +78,10 @@ class FastOptimizer:
         
         # Mass flow rate
         mdot = thrust / (isp * g0)
+        
+        # CRITICAL FIX: Calculate actual burn time from propellant mass
+        propellant_mass = m0 - m_dry
+        burn_time = propellant_mass / mdot
         
         # Burnout mass
         m_burnout = m0 - mdot * burn_time
@@ -124,11 +128,9 @@ class FastOptimizer:
         drag_factor = drag_work_factor * v_burnout / g0
         h_coast = v_burnout**2 / (2 * g0) / (1 + drag_factor)
         
-        # Total apogee (uncalibrated)
+        # Total apogee (raw analytical result - no calibration)
         apogee_raw = h_burnout + h_coast
-        
-        # Apply calibration factor
-        apogee = apogee_raw * self.calibration_factor
+        apogee = apogee_raw
         
         # Max Mach (at burnout)
         temp_burnout = 288.15 - 0.0065 * h_burnout

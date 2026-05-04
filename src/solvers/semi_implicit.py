@@ -69,7 +69,7 @@ class SemiImplicitSolver:
         
         Args:
             state: Current state
-            acceleration_func: Function(altitude, velocity, mass) -> acceleration
+            acceleration_func: Function(altitude, velocity, mass, time_elapsed) -> acceleration
             mass_rate_func: Function(time, mass) -> mass_rate
         
         Returns:
@@ -87,26 +87,36 @@ class SemiImplicitSolver:
             dt = max(self.dt_min, min(self.dt_max, dt))
         
         # Semi-implicit update
-        # 1. Update mass (explicit)
+        # 1. Update time first (needed for thrust gating)
+        new_time = state.time + dt
+        
+        # 2. Update mass (explicit)
         mass_rate = mass_rate_func(state.time, state.mass)
         new_mass = state.mass + mass_rate * dt
         new_mass = max(new_mass, 0.1)  # Prevent negative mass
         
-        # 2. Calculate new acceleration (implicit - uses new mass)
-        new_acceleration = acceleration_func(
-            state.altitude, 
-            state.velocity, 
-            new_mass
-        )
+        # 3. Calculate new acceleration (implicit - uses new mass and new time)
+        # Try to pass time_elapsed parameter if function accepts it
+        try:
+            new_acceleration = acceleration_func(
+                state.altitude, 
+                state.velocity, 
+                new_mass,
+                new_time  # Pass NEW time for thrust gating
+            )
+        except TypeError:
+            # Fallback for old-style functions without time parameter
+            new_acceleration = acceleration_func(
+                state.altitude, 
+                state.velocity, 
+                new_mass
+            )
         
-        # 3. Update velocity (semi-implicit - uses new acceleration)
+        # 4. Update velocity (semi-implicit - uses new acceleration)
         new_velocity = state.velocity + new_acceleration * dt
         
-        # 4. Update position (explicit - uses new velocity)
+        # 5. Update position (explicit - uses new velocity)
         new_altitude = state.altitude + new_velocity * dt
-        
-        # 5. Update time
-        new_time = state.time + dt
         
         # Check convergence (velocity change)
         velocity_change = abs(new_velocity - state.velocity)
