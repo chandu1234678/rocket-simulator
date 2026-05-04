@@ -1,0 +1,90 @@
+name: Docker Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  docker-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build test image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        target: test
+        tags: rocket-simulator:test
+        load: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Run tests in Docker
+      run: docker run --rm rocket-simulator:test
+    
+    - name: Build production image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        target: prod
+        tags: rocket-simulator:latest
+        load: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  multi-python-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Build and test with Python ${{ matrix.python-version }}
+      run: |
+        docker build \
+          --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
+          --target test \
+          -t rocket-simulator:test-py${{ matrix.python-version }} \
+          -f Dockerfile.multi .
+        docker run --rm rocket-simulator:test-py${{ matrix.python-version }}
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install linting tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install black pylint numpy scipy matplotlib
+        pip install -e . --no-deps
+    
+    - name: Check code formatting
+      run: black --check src/ tests/ || true
+      continue-on-error: true
+    
+    - name: Run pylint
+      run: pylint src/ --disable=all --enable=E || true
+      continue-on-error: true

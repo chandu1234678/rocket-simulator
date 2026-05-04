@@ -18,27 +18,27 @@ __all__ = [
 
 # Optional imports - only available if modules are properly installed
 try:
-    from src.optimization.hybrid_optimizer import HybridOptimizer
-    from src.optimization.fast_optimizer import FastOptimizer
-    from src.optimization.feasibility_checker import FeasibilityChecker
+    from .optimization.hybrid_optimizer import HybridOptimizer
+    from .optimization.fast_optimizer import FastOptimizer
+    from .optimization.feasibility_checker import FeasibilityChecker
     __all__.extend(['HybridOptimizer', 'FastOptimizer', 'FeasibilityChecker'])
 except ImportError:
     pass
 
 try:
-    from src.optimization.optimization_result import OptimizationResult
+    from .optimization.optimization_result import OptimizationResult
     __all__.append('OptimizationResult')
 except ImportError:
     pass
 
 try:
-    from src.core.rocket_config_validator import ValidatedRocketConfig
+    from .core.rocket_config_validator import ValidatedRocketConfig
     __all__.append('ValidatedRocketConfig')
 except ImportError:
     pass
 
 try:
-    from src.models.constants import SUPERSONIC_MACH_LIMIT
+    from .models.constants import SUPERSONIC_MACH_LIMIT
     __all__.append('SUPERSONIC_MACH_LIMIT')
 except ImportError:
     pass
