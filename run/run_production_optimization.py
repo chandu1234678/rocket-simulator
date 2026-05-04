@@ -4,10 +4,6 @@ Highest accuracy (95%) - use for final designs and competitions
 WARNING: Requires proper configuration to avoid multiprocessing errors on Windows
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 print("="*80)
 print("PRODUCTION ROCKET OPTIMIZATION (PARALLEL METHOD)")
 print("="*80)

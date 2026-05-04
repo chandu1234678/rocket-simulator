@@ -9,10 +9,6 @@ from typing import Dict, Tuple
 from scipy.optimize import minimize
 import time
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
 from src.optimization.vispootanam_parallel_optimizer import VispootanamParallelOptimizer, VispootanamConfig
 
 

@@ -3,10 +3,6 @@ Feasibility Check Only
 Quick check to see if your rocket design is safe and can reach target altitude
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 print("="*80)
 print("ROCKET FEASIBILITY CHECK")
 print("="*80)

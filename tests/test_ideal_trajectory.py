@@ -109,7 +109,7 @@ class TestIdealTrajectoryAnalyzer:
             target_apogee=500.0
         )
         
-        assert isinstance(is_feasible, (bool, np.bool_))
+        assert isinstance(is_feasible, bool)
     
     def test_suggestions_for_infeasible(self):
         """Test suggestion generation"""

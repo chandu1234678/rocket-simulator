@@ -3,10 +3,6 @@ Accurate Optimization (0.5 seconds)
 Balanced optimization with 90% accuracy - recommended for most users
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 print("="*80)
 print("ACCURATE ROCKET OPTIMIZATION (HYBRID METHOD)")
 print("="*80)

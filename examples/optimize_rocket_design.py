@@ -7,10 +7,6 @@ This script demonstrates parallel optimization of rocket design parameters
 Multiple optimization algorithms run simultaneously to find the best design.
 """
 
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from src.core.config import load_config
 from src.optimization import RocketDesignOptimizer
 import time

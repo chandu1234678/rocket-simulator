@@ -3,10 +3,6 @@ Complete Rocket Analysis - Full Workflow
 For aerospace students - just modify the values below and run!
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 print("="*80)
 print("ROCKET TRAJECTORY ANALYSIS - COMPLETE WORKFLOW")
 print("="*80)

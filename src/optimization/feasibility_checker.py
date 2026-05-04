@@ -8,10 +8,6 @@ import numpy as np
 from typing import Dict, Optional, Tuple
 from dataclasses import dataclass
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
 from src.models.ideal_trajectory import IdealTrajectoryAnalyzer, IdealTrajectoryResult
 from src.models.constants import SUPERSONIC_MACH_LIMIT
 

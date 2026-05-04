@@ -8,10 +8,6 @@ from typing import Dict, Tuple
 from scipy.optimize import minimize
 import time
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
 from src.models.advanced_aerodynamics import AdvancedAerodynamics, FlightRegime
 
 

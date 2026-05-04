@@ -12,10 +12,6 @@ import multiprocessing as mp
 from scipy.optimize import minimize, differential_evolution, Bounds
 import time
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
 from src.optimization.feasibility_checker import FeasibilityChecker, FeasibilityResult
 
 

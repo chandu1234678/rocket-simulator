@@ -3,10 +3,6 @@ Fast Optimization (0.02 seconds)
 Quick optimization for initial design estimates
 """
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 print("="*80)
 print("FAST ROCKET OPTIMIZATION")
 print("="*80)

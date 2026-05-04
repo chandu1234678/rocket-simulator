@@ -6,10 +6,6 @@ If the rocket goes supersonic (Mach > 1.2), the optimization stops and provides
 recommendations for propulsion system modifications.
 """
 
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from src.core.config import load_config
 from src.optimization import RocketDesignOptimizer
 import time

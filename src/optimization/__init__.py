@@ -2,21 +2,24 @@
 Optimization algorithms for rocket design parameters.
 """
 
-from src.optimization.parallel_optimizer import (
+from .parallel_optimizer import (
     ParallelRocketOptimizer,
     OptimizationConfig,
     OptimizationResult
 )
-from src.optimization.rocket_optimizer import RocketDesignOptimizer
-from src.optimization.flight_regime_analyzer import (
+from .rocket_optimizer import RocketDesignOptimizer
+from .flight_regime_analyzer import (
     FlightRegimeAnalyzer,
     FlightRegimeAnalysis
 )
-from src.optimization.vispootanam_parallel_optimizer import (
+from .vispootanam_parallel_optimizer import (
     VispootanamParallelOptimizer,
     VispootanamConfig,
     VispootanamOptimizationResult
 )
+from .hybrid_optimizer import HybridOptimizer
+from .fast_optimizer import FastOptimizer
+from .feasibility_checker import FeasibilityChecker
 
 __all__ = [
     'ParallelRocketOptimizer',
@@ -27,5 +30,8 @@ __all__ = [
     'FlightRegimeAnalysis',
     'VispootanamParallelOptimizer',
     'VispootanamConfig',
-    'VispootanamOptimizationResult'
+    'VispootanamOptimizationResult',
+    'HybridOptimizer',
+    'FastOptimizer',
+    'FeasibilityChecker',
 ]
