@@ -23,6 +23,14 @@ def gravity_at_altitude(h: float) -> float:
         Gravitational acceleration (m/s²)
     
     Source: Newton's law of universal gravitation
+    
+    Examples:
+        >>> gravity_at_altitude(0)      # Sea level
+        9.80665
+        >>> gravity_at_altitude(5000)   # 5km altitude
+        9.79145  # ~0.15% reduction
+        >>> gravity_at_altitude(100000) # 100km altitude
+        9.50516  # ~3% reduction
     """
     return G0_SEA_LEVEL * (EARTH_RADIUS / (EARTH_RADIUS + h)) ** 2
 
