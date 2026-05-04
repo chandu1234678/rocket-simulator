@@ -57,8 +57,7 @@ class FeasibilityChecker:
         specific_impulse: float,
         mass_initial: float,
         mass_dry: float,
-        target_apogee: float,
-        temperature: float = 287.0
+        target_apogee: float
     ) -> FeasibilityResult:
         """
         Comprehensive feasibility check
@@ -70,20 +69,23 @@ class FeasibilityChecker:
             mass_initial: Initial mass (kg)
             mass_dry: Dry mass (kg)
             target_apogee: Target altitude (m)
-            temperature: Temperature for Mach calculation (K)
         
         Returns:
             FeasibilityResult with complete analysis
+        
+        Note:
+            Temperature is calculated at burnout altitude using ISA model
+            for accurate Mach number calculation
         """
         # Run ideal trajectory analysis
+        # Temperature will be calculated at burnout altitude inside analyzer
         ideal_result = self.ideal_analyzer.analyze(
             thrust=thrust,
             burn_time=burn_time,
             specific_impulse=specific_impulse,
             mass_initial=mass_initial,
             mass_dry=mass_dry,
-            target_apogee=target_apogee,
-            temperature=temperature
+            target_apogee=target_apogee
         )
         
         # Check 1: Supersonic prevention (CRITICAL)

@@ -10,6 +10,7 @@ from scipy.optimize import minimize
 import time
 
 from src.optimization.vispootanam_parallel_optimizer import VispootanamParallelOptimizer, VispootanamConfig
+from src.models.constants import SUPERSONIC_MACH_LIMIT
 
 
 class HybridOptimizer:
@@ -112,8 +113,8 @@ class HybridOptimizer:
                 apogee, max_mach = fast_opt.fast_simulate(diameter, cd)
                 
                 # Supersonic penalty
-                if max_mach >= 1.2:
-                    penalty = 1e6 + (max_mach - 1.2) * 1e5
+                if max_mach >= SUPERSONIC_MACH_LIMIT:
+                    penalty = 1e6 + (max_mach - SUPERSONIC_MACH_LIMIT) * 1e5
                     return penalty
                 
                 error = abs(apogee - self.target_apogee)

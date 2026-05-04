@@ -9,6 +9,7 @@ from scipy.optimize import minimize
 import time
 
 from src.models.advanced_aerodynamics import AdvancedAerodynamics, FlightRegime
+from src.models.constants import SUPERSONIC_MACH_LIMIT
 
 
 class FastOptimizer:
@@ -162,7 +163,7 @@ class FastOptimizer:
             apogee, max_mach = self.fast_simulate(diameter, cd)
             
             # Supersonic penalty
-            if max_mach >= 1.2:
+            if max_mach >= SUPERSONIC_MACH_LIMIT:
                 return 1e6 + max_mach * 1e5
             
             # Error

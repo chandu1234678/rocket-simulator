@@ -14,6 +14,7 @@ import time
 from src.models.advanced_aerodynamics import AdvancedAerodynamics, FlightRegime
 from src.optimization.feasibility_checker import FeasibilityChecker
 from src.solvers.semi_implicit import SemiImplicitSolver, SemiImplicitState
+from src.models.constants import SUPERSONIC_MACH_LIMIT
 
 
 @dataclass
@@ -67,7 +68,7 @@ class VispootanamConfig:
     min_error_decrease: float = 0.1     # Minimum error decrease (m)
     
     # Supersonic prevention
-    supersonic_limit: float = 1.2
+    supersonic_limit: float = SUPERSONIC_MACH_LIMIT
     
     # User Cd estimates
     user_cd_estimates: Dict[str, float] = None

@@ -50,8 +50,7 @@ class IdealTrajectoryAnalyzer:
         specific_impulse: float,
         mass_initial: float,
         mass_dry: float,
-        target_apogee: float = None,
-        temperature: float = 287.0
+        target_apogee: float = None
     ) -> IdealTrajectoryResult:
         """
         Analyze ideal trajectory (no drag)
@@ -63,10 +62,13 @@ class IdealTrajectoryAnalyzer:
             mass_initial: Initial mass (kg)
             mass_dry: Dry mass after burnout (kg)
             target_apogee: Target altitude for feasibility check (m)
-            temperature: Temperature for Mach calculation (K)
         
         Returns:
             IdealTrajectoryResult with all performance metrics
+        
+        Note:
+            Temperature is calculated at burnout altitude using ISA standard
+            atmosphere model for accurate Mach number calculation
         """
         # Validate inputs
         if mass_initial <= mass_dry:
