@@ -7,9 +7,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt setup.py ./
-COPY src/__init__.py src/__init__.py
-
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir numpy scipy matplotlib pytest pytest-cov
 
@@ -21,6 +18,7 @@ FROM dev as test
 CMD ["pytest", "tests/", "-v", "--cov=src", "--cov-report=term-missing", "-k", "not parallel"]
 
 FROM base as prod
+COPY setup.py ./
 COPY src/ src/
 COPY data/ data/
 RUN pip install -e . --no-deps
