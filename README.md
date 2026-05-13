@@ -63,7 +63,7 @@ This is a comprehensive rocket trajectory optimization system that combines adva
 | Supersonic Prevention | 100% | 100% | ✅ Perfect |
 | Test Suite | All pass | 44/44 passing | ✅ Perfect |
 
-### 🚀 Core Capabilities
+###  Core Capabilities
 
 - **Multi-Regime Aerodynamics**: D1 (subsonic), D2 (compressible), D3 (transonic)
 - **Semi-Implicit Solver**: Stable numerical integration with adaptive timestep
